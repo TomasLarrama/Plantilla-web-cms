@@ -1,5 +1,6 @@
 Hola, este es el readme, aca tienen el codigo sql, pronto añadire mas contenido
 
+Lo mas importante sobre esta plantilla es que evitamos el uso excesivo de nextjs, buscando ser lo mas vanilla posible
 
 
 
