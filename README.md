@@ -1,4 +1,4 @@
-Hola, este es el readme, aca tiene explicaciones de como funciona el codigo y su logica
+Hola, este es el readme, aca tienen el codigo sql, pronto añadire mas contenido
 
 
 
