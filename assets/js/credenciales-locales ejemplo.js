@@ -1,0 +1,4 @@
+window.env = {
+    URL: "TU_URL_DE_SUPABASE_AQUI",
+    KEY: "TU_CLAVE_PUBLICA_ANON_AQUI"
+};

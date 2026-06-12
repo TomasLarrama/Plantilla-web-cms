@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+
+    <script src="assets/js/credenciales-locales.js"></script>
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="logo">Panel Admin</span>
+        <div class="nav-links">
+            <span id="user-email"></span>
+            <button id="logout-btn" class="btn btn-danger">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h2>Gestión de Stock / Catálogo</h2>
+        <p>Este contenido está protegido por Supabase Auth.</p>
+        
+        <div id="loading" class="loading">Cargando datos de la base de datos...</div>
+        <div id="catalog-grid" class="grid"></div>
+    </main>
+
+    <script type="module">
+        import { checkAuth, logoutUser } from './assets/js/auth.js';
+        import { supabase } from './assets/js/supabase.js';
+
+        async function init() {
+            // 1. Validamos que el usuario esté logueado
+            const user = await checkAuth(true);
+            if (!user) return;
+
+            document.getElementById('user-email').innerText = user.email;
+
+            // Botón de cerrar sesión
+            document.getElementById('logout-btn').addEventListener('click', logoutUser);
+
+            // 2. Ejemplo de consulta (CRUD) a tu base de datos SQL (Tabla 'products')
+            try {
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*');
+
+                document.getElementById('loading').style.display = 'none';
+
+                if (error) throw error;
+
+                const grid = document.getElementById('catalog-grid');
+                if (products.length === 0) {
+                    grid.innerHTML = '<p>No hay productos en la base de datos todavía.</p>';
+                    return;
+                }
+
+                // Renderizamos los productos dinámicamente con código propio
+                products.forEach(prod => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${prod.name}</h3>
+                        <p>${prod.description || 'Sin descripción'}</p>
+                        <div class="card-meta">
+                            <span>Precio: $${prod.price}</span>
+                            <span>Stock: ${prod.stock} u.</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loading').innerText = 'Error al cargar los datos de Supabase.';
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
